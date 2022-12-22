@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Juego de serpiente en 3D</title>
+  </head>
+  <body>
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <script>
+      // Declarar variables
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("3d");
+      let snake = [[0,0,0]];
+      let direction = [1,0,0];
+      let food = [5,5,5];
+
+      // Dibujar el cubo de la serpiente
+      function drawCube(x,y,z) {
+        ctx.beginPath();
+        ctx.rect(x, y, 1, 1);
+        ctx.fillStyle = "green";
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      // Dibujar el cubo de la comida
+      function drawFood(x,y,z) {
+        ctx.beginPath();
+        ctx.rect(x, y, 1, 1);
+        ctx.fillStyle = "red";
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      // Mover la serpiente en la dirección actual
+      function move() {
+        let x = snake[0][0] + direction[0];
+        let y = snake[0][1] + direction[1];
+        let z = snake[0][2] + direction[2];
+        snake.unshift([x,y,z]);
+
+        // Si la serpiente come la comida, no eliminar la cola
+        if (x !== food[0] || y !== food[1] || z !== food[2]) {
+          snake.pop();
+        }
+        // Si no, generar una nueva comida aleatoria
+        else {
+          food = [Math.floor(Math.random() * 20),
+                  Math.floor(Math.random() * 20),
+                  Math.floor(Math.random() * 20)];
+        }
+      }
+
+      // Dibujar el juego
+      function draw() {
+        // Borrar la pantalla
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Dibujar la serpiente y la comida
+        for (let i = 0; i < snake.length; i++) {
+          drawCube(snake[i][0], snake[i][1], snake[i][2]);
+        }
+        drawFood(food[0], food[1], food[2]);
+
+        // Mover la serpiente
+        move();
+
+        // Repetir el proceso cada 100 milisegundos
+        setTimeout(draw, 100);
+      }
+
+      // Iniciar el juego
+      draw();
+    </script>
+  </body>
+</html>
